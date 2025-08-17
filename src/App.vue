@@ -1,11 +1,18 @@
 <template>
-  <BlackChessPiece />
-  <WhiteChessPiece />
+  <div class="app">
+    <ChessPiece color="white" />
+    <ChessPiece color="black" />
+  </div>
 </template>
 
 <script setup lang="ts">
-import BlackChessPiece from './components/BlackChessPiece.vue';
-import WhiteChessPiece from './components/WhiteChessPiece.vue';
+import ChessPiece from './components/ChessPiece.vue';
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+</style>
