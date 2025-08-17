@@ -1,12 +1,11 @@
 <template>
   <div class="app">
-    <ChessPiece color="white" />
-    <ChessPiece color="black" />
+    <TestBoard />
   </div>
 </template>
 
 <script setup lang="ts">
-import ChessPiece from './components/ChessPiece.vue';
+import TestBoard from '@/components/TestBoard.vue';
 </script>
 
 <style scoped lang="scss">
@@ -14,5 +13,11 @@ import ChessPiece from './components/ChessPiece.vue';
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+.app {
+  display: flex;
+  justify-content: center;
+  padding: 100px;
 }
 </style>
