@@ -1,0 +1,21 @@
+// 棋子基础样式
+.chess-piece {
+  $size: 20px;
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  box-shadow:
+    // 高光
+    inset 2px 2px 3px rgba(255, 255, 255, 0.5),
+    // 阴影
+    2px 2px 5px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+// 悬停效果
+.chess-piece:hover {
+  transform: scale(1.05);
+  box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.5),
+    3px 3px 8px rgba(0, 0, 0, 0.4);
+}
