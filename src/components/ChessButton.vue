@@ -6,7 +6,6 @@
 
 <style scoped lang="scss">
 .btn {
-  margin-top: 20px;
   padding: 10px 20px;
   background-color: #825409;
   font-size: 16px;

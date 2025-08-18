@@ -2,6 +2,9 @@ import { ref, reactive } from "vue";
 import { defineStore } from "pinia";
 import { type Cell } from "@/types/cell";
 import { Player } from "@/types/player";
+import type { PieceColor } from "@/types/pieceColor";
+import type { Move } from "@/types/function";
+import { throttle } from "@/utils/throttle";
 
 export const useChessStore = defineStore("chess", () => {
   // 每行每列的格子数量
@@ -10,10 +13,18 @@ export const useChessStore = defineStore("chess", () => {
   const cells = reactive<Cell[]>([]);
   // 棋子数据
   const chessPieces = reactive<Cell[]>([]);
+  // 获胜的棋子数据
+  const winnerPieces = reactive<Cell[]>([]);
   // 当前玩家
   const curPlayer = ref<Player>(Player.BLACK);
+  // 获胜玩家
+  const winner = ref<Player | null>(null);
+  // 游戏是否结束
+  const isGameOver = ref(false);
+  // 落子音效
+  const placeSound = ref<HTMLAudioElement | null>(null);
 
-  // 初始化棋盘格子
+  // 初始化
   const initBoard = () => {
     for (let i = 0; i < size.value * size.value; i++) {
       cells.push({
@@ -22,23 +33,106 @@ export const useChessStore = defineStore("chess", () => {
         piece: null
       });
     }
+    // 初始化音效
+    placeSound.value = new Audio('@/../public/sounds/placePiece.m4a');
   };
   // 放置棋子
   const placeChessPiece = (row: number, col: number) => {
     const index = row * size.value + col;
     // 如果该格子已有棋子，不能再放置
-    if (cells[index].piece) {
+    if (cells[index].piece || isGameOver.value) {
       return;
     }
     // 放置当前玩家的棋子
     cells[index].piece = { color: curPlayer.value };
+    // 播放落子音效
+    placeSound.value?.play();
+    // 记录已放置的棋子
     chessPieces.push(cells[index]);
+    // 检测是否游戏结束
+    isGameOver.value = isGameOverFunction(cells[index]);
+    if (isGameOver.value) {
+      winner.value = curPlayer.value;
+      return;
+    }
     // 切换玩家
     changePlayer();
   };
+  // 节流放置棋子函数
+  const throttledPlaceChessPiece = throttle(placeChessPiece, 300);
+  // 检测是否游戏结束
+  const isGameOverFunction = (cell: Cell) => {
+    return (isHorizontalOver(cell) || isVerticalOver(cell) || isDiagonalOver(cell) || isAntiDiagonalOver(cell));
+  };
+  const createIsOverFunction = (p1Move: Move, p2Move: Move) => {
+    return (cell: Cell) => {
+      const { row, col, piece } = cell;
+      const { color } = piece!;
+      let p1 = p1Move([row, col]);
+      let p2 = p2Move([row, col]);
+      let count = 1;
+      while (isValid(p1, color)) {
+        count++;
+        p1 = p1Move(p1);
+      }
+      while (isValid(p2, color)) {
+        count++;
+        p2 = p2Move(p2);
+      }
+      // return count >= 5;
+      if (count >= 5) {
+        p1 = p2Move(p1);
+        while (isValid(p1, color)) {
+          const [row, col] = p1;
+          const index = row * size.value + col;
+          winnerPieces.push(cells[index]);
+          p1 = p2Move(p1);
+        }
+      }
+      return count >= 5;
+    }
+  }
+  // 横向检测
+  const isHorizontalOver = createIsOverFunction(
+    ([row, col]: number[]) => ([row, col - 1]),
+    ([row, col]: number[]) => ([row, col + 1])
+  );
+  // 纵向检测
+  const isVerticalOver = createIsOverFunction(
+    ([row, col]: number[]) => ([row - 1, col]),
+    ([row, col]: number[]) => ([row + 1, col])
+  );
+  // 斜向检测
+  const isDiagonalOver = createIsOverFunction(
+    ([row, col]: number[]) => ([row - 1, col - 1]),
+    ([row, col]: number[]) => ([row + 1, col + 1])
+  );
+  // 反斜向检测
+  const isAntiDiagonalOver = createIsOverFunction(
+    ([row, col]: number[]) => ([row - 1, col + 1]),
+    ([row, col]: number[]) => ([row + 1, col - 1])
+  );
+  // 判断棋子是否有效
+  const isValid = (point: number[], color: PieceColor) => {
+    const [row, col] = point;
+    if (row < 0 || row >= size.value || col < 0 || col >= size.value) {
+      return false;
+    }
+    const index = row * size.value + col;
+    return cells[index].piece && cells[index].piece.color === color;
+  }
+  // 重新开始
+  const reset = () => {
+    cells.forEach(cell => cell.piece = null);
+    chessPieces.splice(0, chessPieces.length);
+    winnerPieces.splice(0, winnerPieces.length);
+    curPlayer.value = Player.BLACK;
+    winner.value = null;
+    isGameOver.value = false;
+  };
   // 悔棋
   const backPiece = () => {
-    if (chessPieces.length > 0) {
+    if (chessPieces.length > 0 && !isGameOver.value) {
       const { row, col } = chessPieces.pop()!;
       const index = row * size.value + col;
       cells[index].piece = null;
@@ -53,11 +147,12 @@ export const useChessStore = defineStore("chess", () => {
   return {
     size,
     cells,
-    chessPieces,
     curPlayer,
+    winner,
+    winnerPieces,
     initBoard,
-    placeChessPiece,
+    throttledPlaceChessPiece,
     backPiece,
-    changePlayer,
+    reset,
   };
 });

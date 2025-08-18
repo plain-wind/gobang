@@ -7,20 +7,37 @@
       <p>棋盘大小: {{ size }} x {{ size }}</p>
     </div>
     <ChessBoard />
-    <ChessButton class="back-piece" @click="chessStore.backPiece">悔棋</ChessButton>
+    <div class="btns">
+      <ChessButton @click="chessStore.reset">重新开始</ChessButton>
+      <ChessButton @click="chessStore.backPiece">悔棋</ChessButton>
+    </div>
+    <WinnerMsg v-if="winner" :msg="winnerMsg" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useChessStore } from '@/stores/chess';
 import ChessBoard from '@/components/ChessBoard.vue';
 import ChessButton from '@/components/ChessButton.vue';
+import WinnerMsg from '@/components/WinnerMsg.vue';
 import { Player } from '@/types/player';
 
 const title = ref('五子棋游戏');
 const chessStore = useChessStore();
-const { size, curPlayer } = chessStore;
+const { size, curPlayer, winner } = storeToRefs(chessStore);
+const winnerMsg = computed(() => {
+  if (!winner) {
+    return '';
+  }
+  // 根据获胜玩家返回相应的消息
+  if (winner.value === Player.BLACK) {
+    return '黑方获胜!';
+  } else {
+    return '白方获胜!';
+  }
+});
 
 </script>
 
@@ -42,5 +59,14 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 auto;
+  width: 500px;
+}
+
+.btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  width: 200px;
 }
 </style>

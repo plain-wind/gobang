@@ -8,8 +8,8 @@
   }">
     <!-- 格子 -->
     <div v-for="(item, index) in cells" :key="index" class="chess-cell"
-      @click="chessStore.placeChessPiece(item.row, item.col)">
-      <ChessPiece v-if="item.piece" :color="item.piece.color" />
+      @click="chessStore.throttledPlaceChessPiece(item.row, item.col)">
+      <ChessPiece v-if="item.piece" :color="item.piece.color" :active="isWinnerPiece(item.row, item.col)" />
     </div>
   </div>
 </template>
@@ -22,11 +22,16 @@ import { useChessStore } from '@/stores/chess';
 
 // 获取棋盘数据
 const chessStore = useChessStore();
-const { size, cells } = storeToRefs(chessStore);
+const { size, cells, winnerPieces } = storeToRefs(chessStore);
 // 格子的大小
 const cellSize = ref(40);
 // 棋盘的总大小
 const boardSize = computed(() => size.value * cellSize.value);
+
+// 判断是否是获胜的棋子
+const isWinnerPiece = (row: number, col: number) => {
+  return winnerPieces.value.some(item => item.row === row && item.col === col);
+};
 
 chessStore.initBoard();
 </script>
@@ -56,21 +61,6 @@ chessStore.initBoard();
     &:hover {
       background-color: #E5C69F;
     }
-  }
-}
-
-.back-piece {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #825409;
-  font-size: 16px;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #6f4500;
   }
 }
 </style>
