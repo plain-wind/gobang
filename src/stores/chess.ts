@@ -1,10 +1,9 @@
 import { ref, reactive } from "vue";
 import { defineStore } from "pinia";
-import { type Cell } from "@/types/cell";
+import type { Cell, PieceColor, Move } from "@/types/chess";
 import { Player } from "@/types/player";
-import type { PieceColor } from "@/types/pieceColor";
-import type { Move } from "@/types/function";
 import { throttle } from "@/utils/throttle";
+import { placeSound, playSound } from "@/utils/music";
 
 export const useChessStore = defineStore("chess", () => {
   // 每行每列的格子数量
@@ -21,8 +20,7 @@ export const useChessStore = defineStore("chess", () => {
   const winner = ref<Player | null>(null);
   // 游戏是否结束
   const isGameOver = ref(false);
-  // 落子音效
-  const placeSound = ref<HTMLAudioElement | null>(null);
+
 
   // 初始化
   const initBoard = () => {
@@ -33,8 +31,6 @@ export const useChessStore = defineStore("chess", () => {
         piece: null
       });
     }
-    // 初始化音效
-    placeSound.value = new Audio('@/../public/sounds/placePiece.m4a');
   };
   // 放置棋子
   const placeChessPiece = (row: number, col: number) => {
@@ -46,7 +42,7 @@ export const useChessStore = defineStore("chess", () => {
     // 放置当前玩家的棋子
     cells[index].piece = { color: curPlayer.value };
     // 播放落子音效
-    placeSound.value?.play();
+    playSound(placeSound.value);
     // 记录已放置的棋子
     chessPieces.push(cells[index]);
     // 检测是否游戏结束
@@ -59,7 +55,7 @@ export const useChessStore = defineStore("chess", () => {
     changePlayer();
   };
   // 节流放置棋子函数
-  const throttledPlaceChessPiece = throttle(placeChessPiece, 300);
+  const throttledPlaceChessPiece = throttle(placeChessPiece, 500);
   // 检测是否游戏结束
   const isGameOverFunction = (cell: Cell) => {
     return (isHorizontalOver(cell) || isVerticalOver(cell) || isDiagonalOver(cell) || isAntiDiagonalOver(cell));
