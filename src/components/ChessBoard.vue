@@ -8,7 +8,7 @@
   }">
     <!-- 格子 -->
     <div v-for="(item, index) in cells" :key="index" class="chess-cell"
-      @click="chessStore.throttledPlaceChessPiece(item.row, item.col)">
+      @click="chessStore.placeChessPiece(item.row, item.col)">
       <ChessPiece v-if="item.piece" :color="item.piece.color" :active="isWinnerPiece(item.row, item.col)" />
     </div>
   </div>

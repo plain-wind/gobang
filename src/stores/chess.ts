@@ -2,7 +2,6 @@ import { ref, reactive } from "vue";
 import { defineStore } from "pinia";
 import type { Cell, PieceColor, Move } from "@/types/chess";
 import { Player } from "@/types/player";
-import { throttle } from "@/utils/throttle";
 import { placeSound, playSound } from "@/utils/music";
 
 export const useChessStore = defineStore("chess", () => {
@@ -54,8 +53,6 @@ export const useChessStore = defineStore("chess", () => {
     // 切换玩家
     changePlayer();
   };
-  // 节流放置棋子函数
-  const throttledPlaceChessPiece = throttle(placeChessPiece, 500);
   // 检测是否游戏结束
   const isGameOverFunction = (cell: Cell) => {
     return (isHorizontalOver(cell) || isVerticalOver(cell) || isDiagonalOver(cell) || isAntiDiagonalOver(cell));
@@ -147,7 +144,7 @@ export const useChessStore = defineStore("chess", () => {
     winner,
     winnerPieces,
     initBoard,
-    throttledPlaceChessPiece,
+    placeChessPiece,
     backPiece,
     reset,
   };
