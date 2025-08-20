@@ -1,4 +1,4 @@
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { defineStore } from "pinia";
 import type { Cell, PieceColor, Move } from "@/types/chess";
 import { Player } from "@/types/player";
@@ -7,6 +7,10 @@ import { placeSound, playSound } from "@/utils/music";
 export const useChessStore = defineStore("chess", () => {
   // 每行每列的格子数量
   const size = ref(15);
+  // 格子的大小
+  const cellSize = ref(40);
+  // 棋盘的总大小
+  const boardSize = computed(() => size.value * cellSize.value);
   // 棋盘格子数据
   const cells = reactive<Cell[]>([]);
   // 棋子数据
@@ -136,9 +140,14 @@ export const useChessStore = defineStore("chess", () => {
   const changePlayer = () => {
     curPlayer.value = curPlayer.value === Player.BLACK ? Player.WHITE : Player.BLACK;
   };
+  // 判断是否是获胜的棋子
+  const isWinnerPiece = (row: number, col: number) => {
+    return winnerPieces.some(item => item.row === row && item.col === col);
+  };
 
   return {
     size,
+    boardSize,
     cells,
     curPlayer,
     winner,
@@ -147,5 +156,6 @@ export const useChessStore = defineStore("chess", () => {
     placeChessPiece,
     backPiece,
     reset,
+    isWinnerPiece
   };
 });

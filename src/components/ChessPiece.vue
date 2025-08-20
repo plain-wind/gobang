@@ -12,8 +12,6 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/sass/chessPiece.scss";
-
 // 黑色棋子
 .black {
   background: radial-gradient(circle at 30% 30%, #666, #000);

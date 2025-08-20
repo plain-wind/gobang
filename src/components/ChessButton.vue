@@ -6,16 +6,20 @@
 
 <style scoped lang="scss">
 .btn {
-  padding: 10px 20px;
+  padding: 0.1rem 0.2rem;
   background-color: #825409;
-  font-size: 16px;
+  font-size: 0.16rem;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 0.05rem;
   cursor: pointer;
 
   &:hover {
     background-color: #6f4500;
+  }
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
 }
 </style>
