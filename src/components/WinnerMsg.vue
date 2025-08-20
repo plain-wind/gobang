@@ -1,12 +1,8 @@
 <template>
-  <div class="msg">{{ msg }}</div>
+  <div class="msg">
+    <slot></slot>
+  </div>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  msg: string
-}>()
-</script>
 
 <style scoped lang="scss">
 .msg {

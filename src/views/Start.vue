@@ -2,23 +2,18 @@
   <div class="start">
     <div class="btns">
       <ChessButton class="btn">人机对战</ChessButton>
-      <ChessButton class="btn">双人游戏</ChessButton>
+      <ChessButton class="btn" @click="$router.push('/game/2')">双人游戏</ChessButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import ChessButton from '@/components/ChessButton.vue';
-
 </script>
 
 <style scoped lang="scss">
-img {
-  width: 300px;
-  margin-bottom: 50px;
-}
-
 .start {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;

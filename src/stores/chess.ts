@@ -28,11 +28,16 @@ export const useChessStore = defineStore("chess", () => {
   // 初始化
   const initBoard = () => {
     for (let i = 0; i < size.value * size.value; i++) {
-      cells.push({
+      cells[i] = {
         row: Math.floor(i / size.value),
         col: i % size.value,
         piece: null
-      });
+      }
+      // cells.push({
+      //   row: Math.floor(i / size.value),
+      //   col: i % size.value,
+      //   piece: null
+      // });
     }
   };
   // 放置棋子

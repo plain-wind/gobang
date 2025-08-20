@@ -3,8 +3,8 @@
   <div class="chess-board" :style="{
     gridTemplateColumns: `repeat(${size}, 1fr)`,
     gridTemplateRows: `repeat(${size}, 1fr)`,
-    width: `${boardSize}px`,
-    height: `${boardSize}px`
+    width: `${boardSize / 100}rem`,
+    height: `${boardSize / 100}rem`
   }">
     <!-- 格子 -->
     <div v-for="(item, index) in cells" :key="index" class="chess-cell"
@@ -37,7 +37,7 @@ chessStore.initBoard();
     display: flex;
     justify-content: center;
     align-items: center;
-    // padding: 5px;
+    padding: 0.05rem;
 
     &:nth-child(odd) {
       background-color: #DEB887;
