@@ -62,6 +62,11 @@ export const useChessStore = defineStore("chess", () => {
     // 切换玩家
     changePlayer();
   };
+  // 是否是最后一个棋子
+  const isLastPiece = (row: number, col: number) => {
+    const cell =  chessPieces[chessPieces.length - 1] || { row: -1, col: -1 };
+    return cell.row === row && cell.col === col;
+  };
   // 检测是否游戏结束
   const isGameOverFunction = (cell: Cell) => {
     return (isHorizontalOver(cell) || isVerticalOver(cell) || isDiagonalOver(cell) || isAntiDiagonalOver(cell));
@@ -154,11 +159,13 @@ export const useChessStore = defineStore("chess", () => {
     size,
     boardSize,
     cells,
+    chessPieces,
+    winnerPieces,
     curPlayer,
     winner,
-    winnerPieces,
     initBoard,
     placeChessPiece,
+    isLastPiece,
     backPiece,
     reset,
     isWinnerPiece

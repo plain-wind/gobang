@@ -8,6 +8,7 @@
   }">
     <!-- 格子 -->
     <div v-for="(item, index) in cells" :key="index" class="chess-cell"
+      :class="{ 'last-piece': chessStore.isLastPiece(item.row, item.col) }"
       @click="chessStore.placeChessPiece(item.row, item.col)">
       <ChessPiece v-if="item.piece" :color="item.piece.color" :active="chessStore.isWinnerPiece(item.row, item.col)" />
     </div>
@@ -38,6 +39,7 @@ chessStore.initBoard();
     justify-content: center;
     align-items: center;
     padding: 0.05rem;
+    transition: background-color 0.3s;
 
     &:nth-child(odd) {
       background-color: #DEB887;
@@ -50,6 +52,11 @@ chessStore.initBoard();
     &:hover {
       background-color: #E5C69F;
     }
+  }
+
+  & .last-piece {
+    // !important 用于覆盖 hover 的样式
+    background-color: #d2892f !important;
   }
 }
 </style>

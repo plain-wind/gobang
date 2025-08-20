@@ -12,6 +12,7 @@
   color: white;
   border: none;
   border-radius: 0.05rem;
+  transition: background-color 0.3s ease;
   cursor: pointer;
 
   &:hover {
