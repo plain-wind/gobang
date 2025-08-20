@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 
 const visible = ref(false);
+const end = ref(false);
 
 const show = () => {
   visible.value = true;
@@ -11,6 +12,7 @@ const hide = () => {
 
 export {
   visible,
+  end,
   show,
   hide,
 }

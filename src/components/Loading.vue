@@ -1,16 +1,18 @@
 <template>
-  <Curtain class="curtain">
-    <div class="loader"></div>
+  <Curtain class="curtain" :class="{ end: end }">
+    <div class="loader" ></div>
   </Curtain>
 </template>
 
 <script setup lang="ts">
 import Curtain from "@/components/Curtain.vue";
+import { end } from "@/utils/loading";
+
 </script>
 
 <style scoped lang="scss">
 .curtain {
-  background-color: #fff;
+  background-color: #f6f2e8;
 }
 
 .loader {
@@ -23,12 +25,29 @@ import Curtain from "@/components/Curtain.vue";
   animation: spin 1s linear infinite;
 }
 
+.end {
+  animation: fadeOut 0.5s forwards;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
   }
 }
 </style>

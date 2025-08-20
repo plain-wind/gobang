@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { show, hide } from '@/utils/loading';
+import { end, show, hide } from '@/utils/loading';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -24,7 +24,11 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach(() => {
-  hide(); // 隐藏
+  end.value = true; // 设置加载结束状态
+  // console.log(end.value);
+  setTimeout(() => {
+    hide(); // 隐藏
+  }, 500);
 });
 
 export default router;

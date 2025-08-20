@@ -3,7 +3,7 @@
     <RouterView />
   </div>
   <!-- 加载动画 -->
-  <Loading v-if="visible" />
+  <Loading v-if="visible"/>
 </template>
 
 <script setup lang="ts">
