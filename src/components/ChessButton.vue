@@ -12,14 +12,16 @@
   color: white;
   border: none;
   border-radius: 0.05rem;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
 
   &:hover {
-    background-color: #6f4500;
+    background-color: #553502;
+    transform: scale(1.05);
   }
   &:disabled {
     background-color: #ccc;
+    transform: none;
     cursor: not-allowed;
   }
 }

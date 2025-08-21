@@ -10,18 +10,17 @@
     </div>
     <ChessBoard />
     <div class="btns">
-      <ChessButton @click="resetClick">重新开始</ChessButton>
-      <ChessButton @click="backPieceClick" :disabled="chessPieces.length === 0">悔棋</ChessButton>
+      <ChessButton @click="click(ShowType.RESET)">重新开始</ChessButton>
+      <ChessButton @click="click(ShowType.BACK_PIECE)" :disabled="chessPieces.length === 0">悔棋</ChessButton>
     </div>
     <!-- 胜利信息 -->
     <WinnerMsg v-if="winner">{{ winnerMsg }}</WinnerMsg>
     <!-- 确认框 -->
     <Curtain v-if="isShowCurtain">
-      <Alert v-if="showContent === ShowType.RESET" @confirm="resetConfirm" @cancel="isShowCurtain = false">
+      <Alert v-if="showContent === ShowType.RESET" @confirm="confirm(reset)" @cancel="cancel()">
         <p>确定重新开始游戏吗？</p>
       </Alert>
-      <Alert v-else-if="showContent === ShowType.BACK_PIECE" @confirm="backPieceConfirm"
-        @cancel="isShowCurtain = false">
+      <Alert v-else-if="showContent === ShowType.BACK_PIECE" @confirm="confirm(backPiece)" @cancel="cancel()">
         <p>确定悔棋吗？</p>
       </Alert>
     </Curtain>
@@ -29,32 +28,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useRouter } from 'vue-router';
-import { useChessStore } from '@/stores/chess';
+import { computed } from 'vue';
 import ChessBoard from '@/components/ChessBoard.vue';
 import ChessButton from '@/components/ChessButton.vue';
 import WinnerMsg from '@/components/WinnerMsg.vue';
 import Curtain from '@/components/Curtain.vue';
 import Alert from '@/components/Alert.vue';
-import { Player } from '@/types/player';
+import { useChess } from '@/hooks/useChess';
+import { useShow } from '@/hooks/useShow';
+import { Player, ShowType } from '@/types/chess';
+import { useRouteChange } from '@/hooks/useRouteChange';
 
-enum ShowType {
-  RESET = 'reset',
-  BACK_PIECE = 'backPiece',
-}
-
-// 是否展示幕布
-const isShowCurtain = ref(false);
-// 展示内容
-const showContent = ref<ShowType>();
 // 棋盘数据
-const chessStore = useChessStore();
-const { size, curPlayer, winner, chessPieces } = storeToRefs(chessStore);
-// 路由实例
-const router = useRouter();
-
+const { winner, chessPieces, size, curPlayer, backPiece, reset } = useChess();
+// 显示状态
+const { showContent, isShowCurtain, click, confirm, cancel } = useShow();
+// 路由变化处理
+const { back } = useRouteChange();
 // 根据获胜玩家返回相应的消息
 const winnerMsg = computed(() => {
   if (!winner) {
@@ -66,33 +56,6 @@ const winnerMsg = computed(() => {
     return '白方获胜!';
   }
 });
-// 重新开始的点击事件
-const resetClick = () => {
-  isShowCurtain.value = true;
-  showContent.value = ShowType.RESET;
-};
-// 重新开始的确认事件
-const resetConfirm = () => {
-  isShowCurtain.value = false;
-  chessStore.reset();
-};
-// 悔棋的点击事件
-const backPieceClick = () => {
-  isShowCurtain.value = true;
-  showContent.value = ShowType.BACK_PIECE;
-};
-// 悔棋的确认事件
-const backPieceConfirm = () => {
-  isShowCurtain.value = false;
-  chessStore.backPiece();
-};
-// 返回上一页
-const back = () => {
-  chessStore.reset();
-  // window.history.back();
-  router.replace('/');
-};
-
 </script>
 
 <style scoped lang="scss">

@@ -10,10 +10,10 @@
 import { RouterView } from 'vue-router';
 import { setRemUnit } from '@/utils/rem';
 import Loading from '@/components/Loading.vue';
-import { visible } from '@/utils/loading';
+import { useLoading } from '@/hooks/useLoading';
 
-// 加载状态
-
+// 引入加载状态
+const { visible } = useLoading();
 // 初始化rem
 setRemUnit();
 // 监听窗口大小变化

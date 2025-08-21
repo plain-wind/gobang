@@ -1,8 +1,8 @@
 import { ref, reactive, computed } from "vue";
 import { defineStore } from "pinia";
 import type { Cell, PieceColor, Move } from "@/types/chess";
-import { Player } from "@/types/player";
-import { placeSound, playSound } from "@/utils/music";
+import { Player } from "@/types/chess";
+import { playSound } from "@/utils/music";
 
 export const useChessStore = defineStore("chess", () => {
   // 每行每列的格子数量
@@ -23,6 +23,8 @@ export const useChessStore = defineStore("chess", () => {
   const winner = ref<Player | null>(null);
   // 游戏是否结束
   const isGameOver = ref(false);
+  // 落子音效
+  const placeSound = ref<HTMLAudioElement>(new Audio('/sounds/placePiece.m4a'));
 
 
   // 初始化
@@ -64,7 +66,7 @@ export const useChessStore = defineStore("chess", () => {
   };
   // 是否是最后一个棋子
   const isLastPiece = (row: number, col: number) => {
-    const cell =  chessPieces[chessPieces.length - 1] || { row: -1, col: -1 };
+    const cell = chessPieces[chessPieces.length - 1] || { row: -1, col: -1 };
     return cell.row === row && cell.col === col;
   };
   // 检测是否游戏结束

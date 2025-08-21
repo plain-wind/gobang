@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { end, show, hide } from '@/utils/loading';
+import { useLoadingStore } from '@/stores/loading';
 
 const router = createRouter({
   // history: createWebHistory(),
@@ -20,16 +20,14 @@ const router = createRouter({
 
 // 路由守卫 显示和隐藏加载动画
 router.beforeEach((to, from, next) => {
+  const { show } = useLoadingStore();
   show(); // 显示
   next();
 });
 
 router.afterEach(() => {
-  end.value = true; // 设置加载结束状态
-  // console.log(end.value);
-  setTimeout(() => {
-    hide(); // 隐藏
-  }, 500);
+  const { hide } = useLoadingStore();
+  hide();
 });
 
 export default router;

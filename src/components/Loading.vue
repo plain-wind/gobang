@@ -6,8 +6,8 @@
 
 <script setup lang="ts">
 import Curtain from "@/components/Curtain.vue";
-import { end } from "@/utils/loading";
-
+import { useLoading } from "@/hooks/useLoading";
+const { end } = useLoading();
 </script>
 
 <style scoped lang="scss">
