@@ -8,30 +8,31 @@
   }">
     <!-- 格子 -->
     <div v-for="(item, index) in cells" :key="index" class="chess-cell"
-      :class="{ 'last-piece': chessStore.isLastPiece(item.row, item.col) }"
-      @click="chessStore.placeChessPiece(item.row, item.col)">
-      <ChessPiece v-if="item.piece" :color="item.piece.color" :active="chessStore.isWinnerPiece(item.row, item.col)" />
+      :class="{ 'last-piece': isLastPiece(item.row, item.col) }" @click="placeChessPiece(item.row, item.col)">
+      <ChessPiece v-if="item.piece" :color="item.piece" :active="isWinnerPiece(item.row, item.col)" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import ChessPiece from './ChessPiece.vue';
-import { useChessStore } from '@/stores/chess';
+import ChessPiece from '@/components/ChessPiece.vue';
+import { useChess } from '@/hooks/useChess';
 
 // 获取棋盘数据
-const chessStore = useChessStore();
-const { size, boardSize, cells } = storeToRefs(chessStore);
-
+const { size, boardSize, cells, initBoard, isLastPiece, placeChessPiece, isWinnerPiece } = useChess();
 // 棋盘初始化
-chessStore.initBoard();
+initBoard();
 </script>
 
 <style scoped lang="scss">
 .chess-board {
   display: grid;
-  border: 2px solid #825409;
+  background-color: #cb9f57;
+  // border: 2px solid #825409;
+  box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.4);
+  box-sizing: content-box;
+  border-radius: 0.2rem;
+  padding: 0.2rem;
 
   & .chess-cell {
     box-sizing: border-box;
@@ -50,7 +51,7 @@ chessStore.initBoard();
     }
 
     &:hover {
-      background-color: #E5C69F;
+      background-color: #fcd5a8;
     }
   }
 

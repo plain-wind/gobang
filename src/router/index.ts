@@ -1,9 +1,9 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import { useLoadingStore } from '@/stores/loading';
 
 const router = createRouter({
-  // history: createWebHistory(),
-  history: createWebHashHistory(),
+  history: createWebHistory(),
+  // history: createWebHashHistory(),
   routes: [
     {
       path: '/',
@@ -11,10 +11,15 @@ const router = createRouter({
       component: () => import('@/views/Start.vue'),
     },
     {
+      path: '/game/1',
+      name: 'OnePersonGame',
+      component: () => import('@/views/OnePersonGame.vue'),
+    },
+    {
       path: '/game/2',
       name: 'TwoPersonGame',
       component: () => import('@/views/TwoPersonGame.vue'),
-    }
+    },
   ],
 });
 

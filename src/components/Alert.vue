@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import ChessButton from './ChessButton.vue';
+import ChessButton from '@/components/ChessButton.vue';
 </script>
 
 <style scoped lang="scss">

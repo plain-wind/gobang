@@ -14,9 +14,9 @@ export const useShowStore = defineStore("show", () => {
     showContent.value = show;
   };
   // 确认事件
-  const confirm = (fn: () => void) => {
+  const confirm = <T extends unknown[]>(fn: (...args: T) => void, ...args: T) => {
     isShowCurtain.value = false;
-    fn();
+    fn(...args);
   };
   // 取消事件
   const cancel = () => {

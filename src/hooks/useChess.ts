@@ -4,8 +4,8 @@ import { useChessStore } from '@/stores/chess';
 export const useChess = () => {
   // 棋盘数据
   const chessStore = useChessStore();
-  const { size, curPlayer, winner, chessPieces } = storeToRefs(chessStore);
-  const { initBoard, placeChessPiece, isLastPiece, backPiece, reset, isWinnerPiece } = chessStore;
+  const { size, boardSize, curPlayer, winner, player, cells, chessPieces } = storeToRefs(chessStore);
+  const { initBoard, placeChessPiece, isLastPiece, backPiece, reset, isWinnerPiece, canBackPiece } = chessStore;
 
-  return { size, curPlayer, winner, chessPieces, initBoard, placeChessPiece, isLastPiece, backPiece, reset, isWinnerPiece };
+  return { size, boardSize, curPlayer, winner, player, cells, chessPieces, canBackPiece, initBoard, placeChessPiece, isLastPiece, backPiece, reset, isWinnerPiece };
 };

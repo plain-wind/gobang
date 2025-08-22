@@ -6,21 +6,20 @@
     <!-- 状态信息 -->
     <div class="msg">
       <p>当前玩家: {{ curPlayer === Player.BLACK ? '黑方' : '白方' }}</p>
-      <p>棋盘大小: {{ size }} x {{ size }}</p>
     </div>
     <ChessBoard />
     <div class="btns">
       <ChessButton @click="click(ShowType.RESET)">重新开始</ChessButton>
-      <ChessButton @click="click(ShowType.BACK_PIECE)" :disabled="chessPieces.length === 0">悔棋</ChessButton>
+      <ChessButton @click="click(ShowType.BACK_PIECE)" :disabled="!canBackPiece(backCount)">悔棋</ChessButton>
     </div>
     <!-- 胜利信息 -->
     <WinnerMsg v-if="winner">{{ winnerMsg }}</WinnerMsg>
     <!-- 确认框 -->
     <Curtain v-if="isShowCurtain">
-      <Alert v-if="showContent === ShowType.RESET" @confirm="confirm(reset)" @cancel="cancel()">
+      <Alert v-if="showContent === ShowType.RESET" @confirm="confirm(reset)" @cancel="cancel">
         <p>确定重新开始游戏吗？</p>
       </Alert>
-      <Alert v-else-if="showContent === ShowType.BACK_PIECE" @confirm="confirm(backPiece)" @cancel="cancel()">
+      <Alert v-else-if="showContent === ShowType.BACK_PIECE" @confirm="confirm(backPiece, backCount)" @cancel="cancel">
         <p>确定悔棋吗？</p>
       </Alert>
     </Curtain>
@@ -36,15 +35,17 @@ import Curtain from '@/components/Curtain.vue';
 import Alert from '@/components/Alert.vue';
 import { useChess } from '@/hooks/useChess';
 import { useShow } from '@/hooks/useShow';
-import { Player, ShowType } from '@/types/chess';
 import { useRouteChange } from '@/hooks/useRouteChange';
+import { Player, ShowType } from '@/types/chess';
 
 // 棋盘数据
-const { winner, chessPieces, size, curPlayer, backPiece, reset } = useChess();
+const { winner, curPlayer, canBackPiece, backPiece, reset } = useChess();
 // 显示状态
 const { showContent, isShowCurtain, click, confirm, cancel } = useShow();
 // 路由变化处理
 const { back } = useRouteChange();
+// 悔棋的数量
+const backCount = 1;
 // 根据获胜玩家返回相应的消息
 const winnerMsg = computed(() => {
   if (!winner) {
@@ -59,14 +60,6 @@ const winnerMsg = computed(() => {
 </script>
 
 <style scoped lang="scss">
-// h1 {
-//   color: #825409;
-//   font-size: 0.4rem;
-//   margin: 0.3rem;
-// }
-
-
-
 .two-person-game {
   display: flex;
   flex-direction: column;

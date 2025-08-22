@@ -1,8 +1,9 @@
 import { ref, reactive, computed } from "vue";
 import { defineStore } from "pinia";
-import type { Cell, PieceColor, Move } from "@/types/chess";
+import type { Cell } from "@/types/chess";
 import { Player } from "@/types/chess";
 import { playSound } from "@/utils/music";
+import { checkWin } from "@/utils/checkWin";
 
 export const useChessStore = defineStore("chess", () => {
   // 每行每列的格子数量
@@ -21,11 +22,12 @@ export const useChessStore = defineStore("chess", () => {
   const curPlayer = ref<Player>(Player.BLACK);
   // 获胜玩家
   const winner = ref<Player | null>(null);
+  // 玩家选择的棋子颜色 (用于先手或后手)
+  const player = ref<Player | null>(null);
   // 游戏是否结束
   const isGameOver = ref(false);
   // 落子音效
   const placeSound = ref<HTMLAudioElement>(new Audio('/sounds/placePiece.m4a'));
-
 
   // 初始化
   const initBoard = () => {
@@ -35,11 +37,6 @@ export const useChessStore = defineStore("chess", () => {
         col: i % size.value,
         piece: null
       }
-      // cells.push({
-      //   row: Math.floor(i / size.value),
-      //   col: i % size.value,
-      //   piece: null
-      // });
     }
   };
   // 放置棋子
@@ -50,86 +47,29 @@ export const useChessStore = defineStore("chess", () => {
       return;
     }
     // 放置当前玩家的棋子
-    cells[index].piece = { color: curPlayer.value };
+    cells[index].piece = curPlayer.value;
     // 播放落子音效
     playSound(placeSound.value);
     // 记录已放置的棋子
     chessPieces.push(cells[index]);
     // 检测是否游戏结束
-    isGameOver.value = isGameOverFunction(cells[index]);
+    const { isWin, winPieces } = checkWin(cells, size.value, cells[index], true) as { isWin: boolean; winPieces: Cell[] };
+    isGameOver.value = isWin;
+
     if (isGameOver.value) {
       winner.value = curPlayer.value;
+      // 如果游戏结束，记录获胜棋子
+      winnerPieces.push(...winPieces);
       return;
     }
     // 切换玩家
-    changePlayer();
+    changePlayer(1);
   };
   // 是否是最后一个棋子
   const isLastPiece = (row: number, col: number) => {
     const cell = chessPieces[chessPieces.length - 1] || { row: -1, col: -1 };
     return cell.row === row && cell.col === col;
   };
-  // 检测是否游戏结束
-  const isGameOverFunction = (cell: Cell) => {
-    return (isHorizontalOver(cell) || isVerticalOver(cell) || isDiagonalOver(cell) || isAntiDiagonalOver(cell));
-  };
-  const createIsOverFunction = (p1Move: Move, p2Move: Move) => {
-    return (cell: Cell) => {
-      const { row, col, piece } = cell;
-      const { color } = piece!;
-      let p1 = p1Move([row, col]);
-      let p2 = p2Move([row, col]);
-      let count = 1;
-      while (isValid(p1, color)) {
-        count++;
-        p1 = p1Move(p1);
-      }
-      while (isValid(p2, color)) {
-        count++;
-        p2 = p2Move(p2);
-      }
-      // return count >= 5;
-      if (count >= 5) {
-        p1 = p2Move(p1);
-        while (isValid(p1, color)) {
-          const [row, col] = p1;
-          const index = row * size.value + col;
-          winnerPieces.push(cells[index]);
-          p1 = p2Move(p1);
-        }
-      }
-      return count >= 5;
-    }
-  }
-  // 横向检测
-  const isHorizontalOver = createIsOverFunction(
-    ([row, col]: number[]) => ([row, col - 1]),
-    ([row, col]: number[]) => ([row, col + 1])
-  );
-  // 纵向检测
-  const isVerticalOver = createIsOverFunction(
-    ([row, col]: number[]) => ([row - 1, col]),
-    ([row, col]: number[]) => ([row + 1, col])
-  );
-  // 斜向检测
-  const isDiagonalOver = createIsOverFunction(
-    ([row, col]: number[]) => ([row - 1, col - 1]),
-    ([row, col]: number[]) => ([row + 1, col + 1])
-  );
-  // 反斜向检测
-  const isAntiDiagonalOver = createIsOverFunction(
-    ([row, col]: number[]) => ([row - 1, col + 1]),
-    ([row, col]: number[]) => ([row + 1, col - 1])
-  );
-  // 判断棋子是否有效
-  const isValid = (point: number[], color: PieceColor) => {
-    const [row, col] = point;
-    if (row < 0 || row >= size.value || col < 0 || col >= size.value) {
-      return false;
-    }
-    const index = row * size.value + col;
-    return cells[index].piece && cells[index].piece.color === color;
-  }
   // 重新开始
   const reset = () => {
     cells.forEach(cell => cell.piece = null);
@@ -137,20 +77,30 @@ export const useChessStore = defineStore("chess", () => {
     winnerPieces.splice(0, winnerPieces.length);
     curPlayer.value = Player.BLACK;
     winner.value = null;
+    player.value = null;
     isGameOver.value = false;
   };
   // 悔棋
-  const backPiece = () => {
-    if (chessPieces.length > 0 && !isGameOver.value) {
+  const backPiece = (n: number) => {
+    if (chessPieces.length - n < 0 || isGameOver.value) {
+      return;
+    }
+    for (let i = 0; i < n; i++) {
       const { row, col } = chessPieces.pop()!;
       const index = row * size.value + col;
       cells[index].piece = null;
-      changePlayer();
+      changePlayer(n);
     }
   }
+  // 是否可以悔棋
+  const canBackPiece = (n: number) => {
+    return chessPieces.length - n >= 0 && !isGameOver.value;
+  };
   // 切换玩家
-  const changePlayer = () => {
-    curPlayer.value = curPlayer.value === Player.BLACK ? Player.WHITE : Player.BLACK;
+  const changePlayer = (n: number) => {
+    if (n % 2 === 1) {
+      curPlayer.value = curPlayer.value === Player.BLACK ? Player.WHITE : Player.BLACK;
+    }
   };
   // 判断是否是获胜的棋子
   const isWinnerPiece = (row: number, col: number) => {
@@ -162,9 +112,10 @@ export const useChessStore = defineStore("chess", () => {
     boardSize,
     cells,
     chessPieces,
-    winnerPieces,
     curPlayer,
     winner,
+    player,
+    canBackPiece,
     initBoard,
     placeChessPiece,
     isLastPiece,

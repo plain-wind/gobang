@@ -1,0 +1,16 @@
+@font-face {
+  font-family: '东方大楷';
+  font-weight: 400;
+  src:
+    url('../fonts/AlimamaDongFangDaKai-Regular.woff2') format('woff2'),
+    url('../fonts/AlimamaDongFangDaKai-Regular.woff') format('woff'),
+    url('../fonts/AlimamaDongFangDaKai-Regular.ttf') format('truetype'),
+    url('../fonts/AlimamaDongFangDaKai-Regular.otf') format('opentype');
+  font-variation-settings: normal;
+  font-display: swap;
+}
+
+.webfont {
+  font-family: '东方大楷';
+  font-variation-settings: normal; /* Chrome 140 以下版本需要 */
+}

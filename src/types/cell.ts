@@ -1,4 +1,4 @@
-import { type Piece } from "@/types/piece";
+import type { Piece } from "@/types/piece";
 
 export interface Cell {
   row: number,

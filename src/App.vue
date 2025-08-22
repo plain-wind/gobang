@@ -33,4 +33,11 @@ window.addEventListener('resize', setRemUnit);
 
 <style lang="scss">
 @use "@/assets/sass/reset.scss";
+@import url("@/assets/iconfont/css/font.css");
+@import url("//at.alicdn.com/t/c/font_5004583_lblkp01kol.css");
+
+* {
+  // 字体
+  font-family: "东方大楷", sans-serif;
+}
 </style>
