@@ -72,10 +72,10 @@ watch(
   [curPlayer, player],
   () => {
     if (player.value && curPlayer.value !== player.value) {
-      const now = Date.now();
+      // const now = Date.now();
       setTimeout(() => {
         AIPlacePiece(cells.value, placeChessPiece, size.value, curPlayer.value, player.value!);
-        console.log('AI下棋耗时：', Date.now() - now, 'ms');
+        // console.log('AI下棋耗时：', Date.now() - now, 'ms');
       }, 100);
     }
   },

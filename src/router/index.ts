@@ -3,7 +3,6 @@ import { useLoadingStore } from '@/stores/loading';
 
 const router = createRouter({
   history: createWebHistory(),
-  // history: createWebHashHistory(),
   routes: [
     {
       path: '/',

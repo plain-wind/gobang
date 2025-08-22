@@ -21,7 +21,7 @@ import { throttle } from '@/utils/throttle';
 
 // 获取棋盘数据
 const { size, boardSize, cells, initBoard, isLastPiece, placeChessPiece, isWinnerPiece } = useChess();
-const tPlaceChessPiece = throttle(placeChessPiece, 1000);
+const tPlaceChessPiece = throttle(placeChessPiece, 500);
 // 棋盘初始化
 initBoard();
 </script>
