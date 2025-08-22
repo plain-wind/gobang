@@ -27,28 +27,42 @@ initBoard();
 <style scoped lang="scss">
 .chess-board {
   display: grid;
+  position: relative;
   background-color: #cb9f57;
-  // border: 2px solid #825409;
   box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.4);
   box-sizing: content-box;
   border-radius: 0.2rem;
   padding: 0.2rem;
 
+  // 废案
+  // &::before {
+  //   content: '';
+  //   position: absolute;
+  //   width: calc(100% - 0.8rem);
+  //   height: calc(100% - 0.8rem);
+  //   border: 0.4rem solid rgba(0, 0, 0, 0.2);
+  //   border-radius: 0.2rem;
+  // }
+
   & .chess-cell {
-    box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0.05rem;
+    border-radius: 50%;
     transition: background-color 0.3s;
+    background-image:
+      // 线
+      linear-gradient(to right, transparent calc(50% - 0.8px), #825409 calc(50% - 0.8px), #825409 calc(50% + 0.8px), transparent calc(50% + 0.8px)),
+      linear-gradient(to bottom, transparent calc(50% - 0.8px), #825409 calc(50% - 0.8px), #825409 calc(50% + 0.8px), transparent calc(50% + 0.8px));
 
-    &:nth-child(odd) {
-      background-color: #DEB887;
-    }
+    // &:nth-child(odd) {
+    //   background-color: #DEB887;
+    // }
 
-    &:nth-child(even) {
-      background-color: #D5AC7B;
-    }
+    // &:nth-child(even) {
+    //   background-color: #D5AC7B;
+    // }
 
     &:hover {
       background-color: #fcd5a8;
@@ -57,7 +71,7 @@ initBoard();
 
   & .last-piece {
     // !important 用于覆盖 hover 的样式
-    background-color: #d2892f !important;
+    background-color: #a06217 !important;
   }
 }
 </style>

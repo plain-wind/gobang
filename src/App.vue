@@ -18,7 +18,6 @@ const { visible } = useLoading();
 setRemUnit();
 // 监听窗口大小变化
 window.addEventListener('resize', setRemUnit);
-
 </script>
 
 <style lang="scss" scoped>

@@ -2,7 +2,6 @@
   <div class="two-person-game">
     <div class="back">
       <ChessButton class="back-btn" @click="back">返回</ChessButton>
-      <i class="iconfont icon-shezhi1"></i>
     </div>
     <!-- 状态信息 -->
     <div class="msg">
@@ -94,7 +93,7 @@ watch(
 .back {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -102,13 +101,6 @@ watch(
   width: 1.0rem;
   height: 0.5rem;
   font-size: 0.2rem;
-}
-
-.icon-shezhi1 {
-  font-size: 0.3rem;
-  color: #a07705;
-  border: 1px solid #a07705;
-  padding: 0.1rem;
 }
 
 .msg {

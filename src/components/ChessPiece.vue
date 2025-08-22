@@ -4,9 +4,9 @@
 </template>
 
 <script setup lang="ts">
-import type { PieceColor } from '@/types/pieceColor';
+import type { Piece } from '@/types/chess';
 defineProps<{
-  color: PieceColor
+  color: Piece
   active?: boolean
 }>();
 </script>

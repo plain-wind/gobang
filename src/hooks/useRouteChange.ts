@@ -11,7 +11,7 @@ export const useRouteChange = () => {
   const back = () => {
     chessStore.reset();
     // window.history.back();
-    router.replace('/');
+    router.replace('/start');
   };
 
   return { back };

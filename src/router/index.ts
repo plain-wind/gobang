@@ -7,6 +7,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'StartBefore',
+      component: () => import('@/views/StartBefore.vue'),
+    },
+    {
+      path: '/start',
       name: 'Start',
       component: () => import('@/views/Start.vue'),
     },

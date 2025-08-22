@@ -27,7 +27,8 @@ export const useChessStore = defineStore("chess", () => {
   // 游戏是否结束
   const isGameOver = ref(false);
   // 落子音效
-  const placeSound = ref<HTMLAudioElement>(new Audio('/sounds/placePiece.m4a'));
+  const placeSound = ref<HTMLAudioElement>(new Audio('/sounds/placePiece.mp3'));
+  placeSound.value.preload = 'auto';
 
   // 初始化
   const initBoard = () => {
