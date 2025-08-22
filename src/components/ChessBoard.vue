@@ -8,7 +8,7 @@
   }">
     <!-- 格子 -->
     <div v-for="(item, index) in cells" :key="index" class="chess-cell"
-      :class="{ 'last-piece': isLastPiece(item.row, item.col) }" @click="placeChessPiece(item.row, item.col)">
+      :class="{ 'last-piece': isLastPiece(item.row, item.col) }" @click="tPlaceChessPiece(item.row, item.col)">
       <ChessPiece v-if="item.piece" :color="item.piece" :active="isWinnerPiece(item.row, item.col)" />
     </div>
   </div>
@@ -17,9 +17,11 @@
 <script setup lang="ts">
 import ChessPiece from '@/components/ChessPiece.vue';
 import { useChess } from '@/hooks/useChess';
+import { throttle } from '@/utils/throttle';
 
 // 获取棋盘数据
 const { size, boardSize, cells, initBoard, isLastPiece, placeChessPiece, isWinnerPiece } = useChess();
+const tPlaceChessPiece = throttle(placeChessPiece, 1000);
 // 棋盘初始化
 initBoard();
 </script>
